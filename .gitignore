@@ -3,3 +3,6 @@ target
 *.class
 *.settings
 *.classpath
+*.o
+*.asm
+*.d
