@@ -18,7 +18,7 @@ LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
 
 # try to infer the correct QEMU
 ifndef QEMU
-QEMU := $(shell if which qemu > /dev/null; \
+QEMU := $(shell if which qemu-i386 > /dev/null; \
 	then echo qemu; exit; \
 	else \
 	qemu=; \
@@ -37,22 +37,13 @@ QEMUGDB = $(shell if $(QEMU) -nographic -help | grep -q '^-gdb'; \
 	then echo "-gdb tcp::$(GDBPORT)"; \
 	else echo "-s -p $(GDBPORT)"; fi)
 
-all:zing.img
+all:kernel/zing-kernel.img
 
-zing.img:kernel/arch/x86/boot/bootblock kernel/kernel
-	dd if=/dev/zero of=zing.img count=400
-	dd if=kernel/arch/x86/boot/bootblock of=zing.img conv=notrunc
-	dd if=kernel/kernel of=zing.img seek=1 conv=notrunc
-
-kernel/arch/x86/boot/bootblock:
-	cd kernel/arch/x86/boot;make 
-
-kernel/kernel:
+kernel/zing-kernel.img:
 	cd kernel;make
 
-
-qemu: zing.img
-	qemu -smp 2 -parallel stdio -hdb fs.img zing.img
+qemu: kernel/zing-kernel.img
+	qemu -smp 2 -parallel stdio  kernel/zing-kernel.img
 
 qemu-gdb: zing.img .gdbinit
 	@echo "***"
@@ -64,7 +55,4 @@ qemu-gdb: zing.img .gdbinit
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < $^ > $@
 
 clean:
-
-	rm -f zing.img
-	cd boot;make clean 
 	cd kernel;make clean

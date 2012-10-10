@@ -15,12 +15,7 @@
 #include "type.h"
 #include "elf.h"
 
-#ifdef X86
-#include "x86.h"
-#endif
-#ifdef ARM
-#end
-
+#include "asm.h"
 
 #define SECTOR_SIZE  512
 
@@ -34,7 +29,7 @@ void load(void) {
   	struct proghdr *ph, *eph;
   	void (*entry)(void);
 
-	// kernel loaded into physical address 0x10000	64KB´¦
+	// kernel loaded into physical address 0x10000	64KBï¿½ï¿½
 	elf = (struct elfhdr*)0x10000; 					// scratch space
 
 	 // Read 1st page off disk from 1st sector, 0 sector for bootsector

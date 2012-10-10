@@ -5,8 +5,8 @@
  *      Author: sihai
  */
 
-#ifndef MMU_H_
-#define MMU_H_
+#ifndef X86_MMU_H_
+#define X86_MMU_H_
 
 // This file contains definitions for the
 // x86 memory management unit (MMU).
@@ -165,4 +165,4 @@ struct gatedesc {
 }
 
 
-#endif /* MMU_H_ */
+#endif /* X86_MMU_H_ */
