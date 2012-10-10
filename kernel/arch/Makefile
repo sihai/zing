@@ -6,16 +6,13 @@
 
 include ../../config.mk
 
-CFLAGS += -I../inc -I../
-
-OBJECTS = zing.o
+CFLAGS = ${CFLAGS}
 
 .PHONY : all clean
 
-all:${OBJECTS}
 
--include *.d
-	
+all:
+	cd ${TARGET};make
+
 clean:
-	rm -fr ${OBJECTS}
-	rm -fr *.d
+	cd ${TARGET};make clean

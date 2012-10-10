@@ -14,8 +14,7 @@
 
 #include "type.h"
 #include "elf.h"
-
-#include "asm.h"
+#include "routines.h"
 
 #define SECTOR_SIZE  512
 

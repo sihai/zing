@@ -8,6 +8,7 @@
 #include "type.h"
 #include "asm.h"
 #include "mm.h"
+#include "routines.h"
 
 static void bootothers(void);
 static void mpmain(void) __attribute__((noreturn));

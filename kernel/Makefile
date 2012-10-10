@@ -8,11 +8,16 @@ include ../config.mk
 
 CFLAGS = ${CFLAGS} -Iinc
 
+ ifeq (${TARGET}, x86)
+ 	ARCH = x86
+ endif
+ 
+
 .PHONY : all clean
 
 all:zing-kernel.img
 
-zing-kernel.img:x86 init/init.o
+zing-kernel.img: ${ARCH} init/init.o
 	dd if=/dev/zero of=zing-kernel.img count=400
 	dd if=arch/x86/boot/bootblock of=zing-kernel.img conv=notrunc
 	dd if=init.o of=zing-kernel.img seek=1 conv=notrunc

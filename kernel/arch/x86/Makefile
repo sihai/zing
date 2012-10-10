@@ -9,6 +9,8 @@ include ../../../config.mk
 
 CFLAGS += -I../inc
 
+.PHONY : all clean
+
 all:x86
 
 x86:boot
@@ -20,6 +22,5 @@ boot:
 bootsector.o: bootsector.S
 	$(CC) $(CFLAGS) -nostdinc -c bootsector.S
 
-.PHONY : clean
 clean:
 	cd boot;make clean
