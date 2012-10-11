@@ -1,27 +1,22 @@
-# Cross-compiling (e.g., on Mac OS X)
-# TOOLPREFIX = i386-jos-elf-
+###########################################################################
+#								zing
+#
+#
+###########################################################################
 
-# Using native tools (e.g., on X86 Linux)
-TOOLPREFIX = 
+include config.mk
 
-CC = $(TOOLPREFIX)gcc
-AS = $(TOOLPREFIX)gas
-LD = $(TOOLPREFIX)ld
-OBJCOPY = $(TOOLPREFIX)objcopy
-OBJDUMP = $(TOOLPREFIX)objdump
-CFLAGS = -fno-builtin -O2 -Wall -MD -ggdb -m32 -I include
-CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
-ASFLAGS = -m32
-# FreeBSD ld wants ``elf_i386_fbsd''
-LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
+.PHONY : all clean
 
+QEMU = qemu-system-i386
 
 # try to infer the correct QEMU
+# try to infer the correct QEMU
 ifndef QEMU
-QEMU := $(shell if which qemu-i386 > /dev/null; \
-	then echo qemu; exit; \
+QEMU := $(shell if which qemu-system-i386 > /dev/null; \
+	then echo qemu-system-i386 ; exit; \
 	else \
-	qemu=; \
+	qemu=/Applications/Q.app/Contents/MacOS/i386-softmmu.app/Contents/MacOS/i386-softmmu; \
 	if test -x $$qemu; then echo $$qemu; exit; fi; fi; \
 	echo "***" 1>&2; \
 	echo "*** Error: Couldn't find a working QEMU executable." 1>&2; \
@@ -43,7 +38,7 @@ kernel/zing-kernel.img:
 	cd kernel;make
 
 qemu: kernel/zing-kernel.img
-	qemu -smp 2 -parallel stdio  kernel/zing-kernel.img
+	${QEMU} -smp 2 -parallel stdio kernel/zing-kernel.img
 
 qemu-gdb: zing.img .gdbinit
 	@echo "***"

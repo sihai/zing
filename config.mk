@@ -15,3 +15,7 @@ CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 &
 ASFLAGS = -m32
 # FreeBSD ld wants ``elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
+
+ifeq (${TARGET}, x86)
+ 	ARCH = x86
+endif
