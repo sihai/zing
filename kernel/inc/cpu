@@ -1,0 +1,42 @@
+/*
+ * cpu.h
+ *
+ *  Created on: Oct 11, 2012
+ *      Author: sihai
+ */
+
+#ifndef CPU_H_
+#define CPU_H_
+
+// Saved registers for kernel context switches.
+// Don't need to save all the %fs etc. segment registers,
+// because they are constant across kernel contexts.
+// Save all the regular registers so we don't need to care
+// which are caller save, but not the return register %eax.
+// (Not saving %eax just simplifies the switching code.)
+// The layout of context must match code in swtch.S.
+struct context {
+  int eip;
+  int esp;
+  int ebx;
+  int ecx;
+  int edx;
+  int esi;
+  int edi;
+  int ebp;
+};
+
+
+// Per-CPU state
+struct cpu {
+  uchar apicid;               // Local APIC ID
+  struct proc *curproc;       // Process currently running.
+  struct context context;     // Switch here to enter scheduler
+  struct taskstate ts;        // Used by x86 to find stack for interrupt
+  struct segdesc gdt[NSEGS];  // x86 global descriptor table
+  volatile uint booted;       // Has the CPU started?
+  int ncli;                   // Depth of pushcli nesting.
+  int intena;                 // Were interrupts enabled before pushcli?
+};
+
+#endif /* CPU_H_ */
